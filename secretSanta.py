@@ -10,11 +10,7 @@ def read_csv():
     root = tk.Tk()
     root.withdraw()
     filename = filedialog.askopenfilename(
-        title="Choose a csv file",
-        filetypes=(
-            ("CSV", "*.csv"),
-            ("all files", "*.*s")
-        )
+        title="Choose a csv file", filetypes=(("CSV", "*.csv"), ("all files", "*.*s"))
     )
     root.destroy()
     with open(filename) as data:
@@ -27,10 +23,7 @@ def read_csv():
 def make_pairs(data):
     data = list(data.items())
     random.shuffle(data)
-    return [
-        (name, data[(i + 1) % len(data)])
-        for i, name in enumerate(data)
-    ]
+    return [(name, data[(i + 1) % len(data)]) for i, name in enumerate(data)]
 
 
 def ask_send_confirmation():
@@ -38,7 +31,7 @@ def ask_send_confirmation():
     root.withdraw()
     send_confirmation = messagebox.askyesno(
         title="Confirmation d'envoi",
-        message="Voulez vous envoyer les résultats par mail ?"
+        message="Voulez vous envoyer les résultats par mail ?",
     )
     root.destroy()
     if send_confirmation is False:
@@ -50,22 +43,22 @@ def ask_send_confirmation():
 
 def send_results(pairs):
     ask_send_confirmation()
-    outlook = win32.Dispatch('outlook.application')
+    outlook = win32.Dispatch("outlook.application")
     for pair in pairs:
         sender_name = pair[0][0].split()[0]
         sender_email = pair[0][1]
         receiver_name = pair[1][0].split()[0]
         mail = outlook.CreateItem(0)
-        mail.Subject = "Secret Santa 2022"
+        mail.Subject = "Secret Santa 27 décembre 2022"
         mail.To = sender_email
         mail.HTMLBody = r"""
         Beep...Beep...Boop...Bonjour {sender},<br><br>
         Je suis le robot lutin chargé de t'annoncer le résultat de ton tirage au sort.<br><br>
-        Félicitations ! Tu es chargé(e) d'offrir un cadeau à {receiver}<br><br>
+        Félicitations ! Tu es chargé(e) d'offrir un cadeau à {receiver}.<br><br>
         Mais chut c'est un secret !<br><br>
-        Pour les curieux mon code source est disponible <a href="https://github.com/koga-sensei/Automated-Secret-Santa">ici</a>.<br><br>
-        Si vous avez des questions n'hésitez pas à répondre à ce mail, mon maître 
-        Sur ce, Joyeux Noël !!!
+        {receiver} ne saura pas que tu es son père/mère Noël, à moins que tu ne souhaites lui révéler le jour-J.<br><br>
+        Pour les curieux mon code source est disponible <a href="https://github.com/seb-four/secret_santa_mail_bot/blob/main/secretSanta.py">ici</a>.<br><br>
+        Sur ce, rendez-vous le 27 décembre et Joyeux Noël à tous !!!
         <body>
             <pre>
            ____
@@ -86,7 +79,9 @@ def send_results(pairs):
         </body>
         <br><br>
         Made with Python 3.11 with love.
-        """.format(sender=sender_name, receiver=receiver_name)
+        """.format(
+            sender=sender_name, receiver=receiver_name
+        )
         mail.Send()
 
 
